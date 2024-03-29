@@ -262,7 +262,7 @@ async function searchTeamsInSeason(db) {
                     reject(error);
                 } else {
                     const res = JSON.parse(response.body);
-                    result.data.forEach(async (team) => {
+                    res.data.forEach(async (team) => {
                         const result = await db.collection('teams').insertOne(team);
                     })
                     if (res.pagination && res.pagination.has_more === false) {
