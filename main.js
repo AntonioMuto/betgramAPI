@@ -23,7 +23,7 @@ async function connectToMongoDB() {
         await db.collection('players').createIndex(
             { id: 1 },
             { unique: true }
-          );
+        );
 
     } catch (err) {
         console.error('Errore durante la connessione a MongoDB:', err);
@@ -63,10 +63,9 @@ app.get('/api/insert/players', async function (req, res) {
     }
 });
 
-app.get('/api/retrieve/teams', async function (req, res) {
+app.get('/api/retrieve/team/:id', async function (req, res) {
     try {
-        // const result = await retrieveData();
-        // const result = await dbName.collection('match').distinct("season_id");
+        const result = await retrieveData(req.params.id);
         res.json(result);
     } catch (error) {
         console.error(error);
@@ -277,11 +276,12 @@ async function searchTeamsInSeason(db) {
 }
 
 
-async function retrieveData() {
-    const result = await dbName.collection('match').find({ round_id: 309722 }).project({ "participants": 1 }).toArray(function (err, result) {
-        if (err) throw err;
-    });
-    return result;
+async function retrieveData(teamId) {
+    var query = { id: teamId };
+    console.log(query);
+    const queryResult = await dbName.collection("teams").find();
+    console.log(queryResult);
+    return queryResult;
 }
 
 async function insetDocumentsByDay(data, db) {
@@ -291,7 +291,7 @@ async function insetDocumentsByDay(data, db) {
             console.log(apiResponse.length);
             if (apiResponse.length > 0) {
                 for (let index = 0; index < arrayDataCompleto.length; index++) {
-                    const result = await db.collection('match').insertOne(arrayDataCompleto[index]);
+                    const result = await db.collection('matches').insertOne(arrayDataCompleto[index]);
                 }
                 return true;
                 // var result = await insertFile(`${req.params.data}`, content);
