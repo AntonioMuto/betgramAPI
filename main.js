@@ -20,10 +20,6 @@ async function connectToMongoDB() {
 
         var db = client.db("betgram");
         dbName = db;
-        await db.collection('players').createIndex(
-            { id: 1 },
-            { unique: true }
-        );
 
     } catch (err) {
         console.error('Errore durante la connessione a MongoDB:', err);
@@ -65,8 +61,10 @@ app.get('/api/insert/players', async function (req, res) {
 
 app.get('/api/retrieve/team/:id', async function (req, res) {
     try {
-        const result = await retrieveData(req.params.id);
-        res.json(result);
+        var query = { id: parseInt(req.params.id)};
+        const queryCursor = dbName.collection("teams").find(query);
+        const queryResult = await queryCursor.toArray(); 
+        res.status(200).json({queryResult});
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
