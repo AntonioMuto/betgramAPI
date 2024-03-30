@@ -385,7 +385,7 @@ async function insertLeaguesInMongoDb(db) {
 
     await Promise.all(arraySeason.map(async (element) => {
         return new Promise((resolve, reject) => {
-            const url = `https://api.sportmonks.com/v3/football/leagues/${element}?api_token=${TOKEN}&include=country;latest.scores;currentSeason&timezone=Europe/Rome;`;
+            const url = `https://api.sportmonks.com/v3/football/leagues/${element}?api_token=${TOKEN}&include=country;latest.scores;currentSeason&timezone=Europe/Rome`;
             request.get({ url }, async (error, response, body) => {
                 if (error) {
                     console.error('Errore nella richiesta HTTP:', error);
