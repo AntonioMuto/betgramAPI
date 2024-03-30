@@ -59,10 +59,82 @@ app.get('/api/insert/players', async function (req, res) {
     }
 });
 
+app.get('/api/insert/leagues', async function (req, res) {
+    try {
+        var result = await insertLeaguesInMongoDb(dbName)
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/insert/coaches', async function (req, res) {
+    try {
+        if(dbName !== undefined){
+            var result = await insertAllCoaches(dbName)
+            res.json(result);
+        } else{
+            res.json("UNDEFINED");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.get('/api/retrieve/team/:id', async function (req, res) {
     try {
         var query = { id: parseInt(req.params.id)};
         const queryCursor = dbName.collection("teams").find(query);
+        const queryResult = await queryCursor.toArray(); 
+        res.status(200).json({queryResult});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/retrieve/player/:id', async function (req, res) {
+    try {
+        var query = { id: parseInt(req.params.id)};
+        const queryCursor = dbName.collection("players").find(query);
+        const queryResult = await queryCursor.toArray(); 
+        res.status(200).json({queryResult});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/retrieve/playersByTeam/:team', async function (req, res) {
+    try {
+        var query = { id: parseInt(req.params.team)};
+        const queryCursor = dbName.collection("players").find(query);
+        const queryResult = await queryCursor.toArray(); 
+        res.status(200).json({queryResult});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/retrieve/league/:id', async function (req, res) {
+    try {
+        var query = { id: parseInt(req.params.id)};
+        const queryCursor = dbName.collection("leagues").find(query);
+        const queryResult = await queryCursor.toArray(); 
+        res.status(200).json({queryResult});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/retrieve/coaches/:id', async function (req, res) {
+    try {
+        var query = { id: parseInt(req.params.id)};
+        const queryCursor = dbName.collection("coaches").find(query);
         const queryResult = await queryCursor.toArray(); 
         res.status(200).json({queryResult});
     } catch (error) {
@@ -273,6 +345,37 @@ async function searchTeamsInSeason(db) {
     return arrayResults;
 }
 
+async function insertLeaguesInMongoDb(db){
+    const arraySeason = [
+        2,
+        8,
+        384,
+        387,
+        564,
+        82,
+        301,
+        72,
+        462
+    ];
+    const arrayResults = [];
+
+    await Promise.all(arraySeason.map(async (element) => {
+        return new Promise((resolve, reject) => {
+            const url = `https://api.sportmonks.com/v3/football/leagues/${element}?api_token=${TOKEN}&include=country;latest;currentSeason;`;
+            request.get({ url }, async (error, response, body) => {
+                if (error) {
+                    console.error('Errore nella richiesta HTTP:', error);
+                    reject(error);
+                } else {
+                    const res = JSON.parse(response.body);
+                    const result = await db.collection('leagues').insertOne(res.data);
+                    resolve();
+                }
+            });
+        });
+    }));
+    return arrayResults;
+}
 
 async function retrieveData(teamId) {
     var query = { id: teamId };
@@ -303,11 +406,58 @@ async function insetDocumentsByDay(data, db) {
         });
 }
 
+async function insertAllCoaches(db) {
+    var arrayDataCompleto = [];
+    await callApiCoaches(arrayDataCompleto)
+        .then(async (apiResponse) => {
+            console.log(apiResponse.length);
+            if (apiResponse.length > 0) {
+                for (let index = 0; index < arrayDataCompleto.length; index++) {
+                    const result = await db.collection('coaches').insertOne(arrayDataCompleto[index]);
+                }
+                return true;
+            } else {
+                return false;
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        });
+}
+
 async function callApiMatch(date, arrayDataCompleto) {
     var end = false;
     for (var i = 1; i < 20 && !end; i++) {
         await new Promise((resolve, reject) => {
             const url = `https://api.sportmonks.com/v3/football/fixtures/date/${date}?api_token=${TOKEN}&include=round:name;league:id;coaches:common_name,image_path;coaches;league:id;participants;scores;venue:name,capacity,image_path,city_name;state;lineups.player:common_name,image_path;events;comments;lineups.player:common_name,image_path;events;comments;statistics:data,participant_id;periods;metadata;&filters=fixtureLeagues:384,387,564,462,72,82,301,8,2;MetaDataTypes:159,161,162;fixtureStatisticTypes:54,86,45,41,56,42,39,51,34,80,58,57&page=${i}&timezone=Europe/Rome`;
+            request.get({ url }, (error, response, body) => {
+                if (error) {
+                    console.error('Errore nella richiesta HTTP:', error);
+                    reject(error);
+                } else {
+                    var res = JSON.parse(response.body);
+                    if (res.pagination && res.pagination.has_more === false) {
+                        end = true;
+                        resolve(arrayDataCompleto);
+                    }
+                    for (var match of res.data || []) {
+                        arrayDataCompleto.push(match);
+                    }
+                    resolve(arrayDataCompleto);
+                }
+            })
+        });
+    }
+    return new Promise((resolve, reject) => {
+        resolve(arrayDataCompleto);
+    });
+}
+
+async function callApiCoaches(arrayDataCompleto) {
+    var end = false;
+    for (var i = 1; i < 20 && !end; i++) {
+        await new Promise((resolve, reject) => {
+            const url = `https://api.sportmonks.com/v3/football/coaches?api_token=${TOKEN}&include=country;nationality&page=${i}`;
             request.get({ url }, (error, response, body) => {
                 if (error) {
                     console.error('Errore nella richiesta HTTP:', error);
