@@ -71,10 +71,10 @@ app.get('/api/insert/leagues', async function (req, res) {
 
 app.get('/api/insert/coaches', async function (req, res) {
     try {
-        if(dbName !== undefined){
+        if (dbName !== undefined) {
             var result = await insertAllCoaches(dbName)
             res.json(result);
-        } else{
+        } else {
             res.json("UNDEFINED");
         }
     } catch (error) {
@@ -85,10 +85,10 @@ app.get('/api/insert/coaches', async function (req, res) {
 
 app.get('/api/retrieve/team/:id', async function (req, res) {
     try {
-        var query = { id: parseInt(req.params.id)};
+        var query = { id: parseInt(req.params.id) };
         const queryCursor = dbName.collection("teams").find(query);
-        const queryResult = await queryCursor.toArray(); 
-        res.status(200).json({queryResult});
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -97,10 +97,10 @@ app.get('/api/retrieve/team/:id', async function (req, res) {
 
 app.get('/api/retrieve/player/:id', async function (req, res) {
     try {
-        var query = { id: parseInt(req.params.id)};
+        var query = { id: parseInt(req.params.id) };
         const queryCursor = dbName.collection("players").find(query);
-        const queryResult = await queryCursor.toArray(); 
-        res.status(200).json({queryResult});
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -109,10 +109,10 @@ app.get('/api/retrieve/player/:id', async function (req, res) {
 
 app.get('/api/retrieve/playersByTeam/:team', async function (req, res) {
     try {
-        var query = { id: parseInt(req.params.team)};
+        var query = { id: parseInt(req.params.team) };
         const queryCursor = dbName.collection("players").find(query);
-        const queryResult = await queryCursor.toArray(); 
-        res.status(200).json({queryResult});
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -121,10 +121,10 @@ app.get('/api/retrieve/playersByTeam/:team', async function (req, res) {
 
 app.get('/api/retrieve/league/:id', async function (req, res) {
     try {
-        var query = { id: parseInt(req.params.id)};
+        var query = { id: parseInt(req.params.id) };
         const queryCursor = dbName.collection("leagues").find(query);
-        const queryResult = await queryCursor.toArray(); 
-        res.status(200).json({queryResult});
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -133,10 +133,34 @@ app.get('/api/retrieve/league/:id', async function (req, res) {
 
 app.get('/api/retrieve/coaches/:id', async function (req, res) {
     try {
-        var query = { id: parseInt(req.params.id)};
+        var query = { id: parseInt(req.params.id) };
         const queryCursor = dbName.collection("coaches").find(query);
-        const queryResult = await queryCursor.toArray(); 
-        res.status(200).json({queryResult});
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/retrieve/match/:id', async function (req, res) {
+    try {
+        var query = { id: parseInt(req.params.id) };
+        const queryCursor = dbName.collection("matches").find(query);
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/retrieve/matchByDate/:date', async function (req, res) {
+    try {
+        const query = { starting_at: { $regex: new RegExp(`^${req.params.date}`) } };
+        const queryCursor = dbName.collection("matches").find(query);
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -345,7 +369,7 @@ async function searchTeamsInSeason(db) {
     return arrayResults;
 }
 
-async function insertLeaguesInMongoDb(db){
+async function insertLeaguesInMongoDb(db) {
     const arraySeason = [
         2,
         8,
@@ -379,9 +403,7 @@ async function insertLeaguesInMongoDb(db){
 
 async function retrieveData(teamId) {
     var query = { id: teamId };
-    console.log(query);
     const queryResult = await dbName.collection("teams").find();
-    console.log(queryResult);
     return queryResult;
 }
 
@@ -389,7 +411,6 @@ async function insetDocumentsByDay(data, db) {
     var arrayDataCompleto = [];
     await callApiMatch(data, arrayDataCompleto)
         .then(async (apiResponse) => {
-            console.log(apiResponse.length);
             if (apiResponse.length > 0) {
                 for (let index = 0; index < arrayDataCompleto.length; index++) {
                     const result = await db.collection('matches').insertOne(arrayDataCompleto[index]);
@@ -410,7 +431,6 @@ async function insertAllCoaches(db) {
     var arrayDataCompleto = [];
     await callApiCoaches(arrayDataCompleto)
         .then(async (apiResponse) => {
-            console.log(apiResponse.length);
             if (apiResponse.length > 0) {
                 for (let index = 0; index < arrayDataCompleto.length; index++) {
                     const result = await db.collection('coaches').insertOne(arrayDataCompleto[index]);
