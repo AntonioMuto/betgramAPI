@@ -107,39 +107,22 @@ app.get('/api/retrieve/teamsByLeague/:league', async function (req, res) {
     }
 });
 
-app.get('/api/trytry', async function (req, res) {
+app.get('/api/trytry/:page', async function (req, res) {
     try {
         var query = [
+            { $match: { season_id: 21730 } },
             {
-                $unwind: "$latest" // Espandi l'array per poterlo usare come campo separato
+              $group: {
+                _id: '$round_id',
+                matches: { $push: '$$ROOT' }
+              }
             },
-            {
-                $group: {
-                    _id: { lega: "$latest.league_id" }, // Raggruppa gli elementi in base al campo group_id
-                    elements: { $push: { id: "$latest.id", group_id: "$latest.group_id" } } // Crea un array di elementi per ciascun gruppo
-                }
-            },
-            {
-                $group: {
-                    _id: { id: "$latest.group_id", lega: "$latest.league_id" }, // Raggruppa gli elementi in base al campo group_id
-                    elements: { $push: { id: "$latest.id", group_id: "$latest.group_id" } } // Crea un array di elementi per ciascun gruppo
-                }
-            },
-            //   {
-            //     $project: {
-            //       groupId: "$_id", // Rinomina l'_id come groupId
-            //       elements: 1 // Mantieni solo il campo elements
-            //     }
-            //   },
-            //   {
-            //     $sort: {
-            //       groupId: 1 // Ordina gli array in base al campo groupId
-            //     }
-            //   }
-        ];
-        const queryCursor = dbName.collection("leagues").aggregate(query);
+            { $sort: { "_id": 1 } }
+          ];
+        const queryCursor = dbName.collection("matches").aggregate(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const round = queryResult[req.params.page];
+        res.status(200).json({ round });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -207,12 +190,35 @@ app.get('/api/retrieve/match/:id', async function (req, res) {
 });
 
 
-app.get('/api/retrieve/matchByDate/:date', async function (req, res) {
+app.get('/api/retrieve/matchesByDate/:date', async function (req, res) {
     try {
         const query = { starting_at: { $regex: new RegExp(`^${req.params.date}`) } };
         const queryCursor = dbName.collection("matches").find(query);
         const queryResult = await queryCursor.toArray();
         res.status(200).json({ queryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+app.get('/api/retrieve/matchesBySeason/:season/page/:pageNumber', async function (req, res) {
+    try {
+        var query = [
+            { $match: { season_id: parseInt(req.params.season) } },
+            {
+              $group: {
+                _id: '$round_id',
+                matches: { $push: '$$ROOT' }
+              }
+            },
+            { $sort: { "_id": 1 } }
+          ];
+        const queryCursor = dbName.collection("matches").aggregate(query);
+        const queryResult = await queryCursor.toArray();
+        const round = queryResult[parseInt(req.params.pageNumber)-1];
+        res.status(200).json({ round });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
