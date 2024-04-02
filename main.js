@@ -95,6 +95,57 @@ app.get('/api/retrieve/team/:id', async function (req, res) {
     }
 });
 
+app.get('/api/retrieve/teamsByLeague/:league', async function (req, res) {
+    try {
+        var query = { activeseasons: { $elemMatch: { "league_id": parseInt(req.params.league)}}};
+        const queryCursor = dbName.collection("teams").find(query);
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.get('/api/trytry', async function (req, res) {
+    try {
+        var query = [
+            {
+                $unwind: "$latest" // Espandi l'array per poterlo usare come campo separato
+            },
+            {
+                $group: {
+                    _id: { lega: "$latest.league_id" }, // Raggruppa gli elementi in base al campo group_id
+                    elements: { $push: { id: "$latest.id", group_id: "$latest.group_id" } } // Crea un array di elementi per ciascun gruppo
+                }
+            },
+            {
+                $group: {
+                    _id: { id: "$latest.group_id", lega: "$latest.league_id" }, // Raggruppa gli elementi in base al campo group_id
+                    elements: { $push: { id: "$latest.id", group_id: "$latest.group_id" } } // Crea un array di elementi per ciascun gruppo
+                }
+            },
+            //   {
+            //     $project: {
+            //       groupId: "$_id", // Rinomina l'_id come groupId
+            //       elements: 1 // Mantieni solo il campo elements
+            //     }
+            //   },
+            //   {
+            //     $sort: {
+            //       groupId: 1 // Ordina gli array in base al campo groupId
+            //     }
+            //   }
+        ];
+        const queryCursor = dbName.collection("leagues").aggregate(query);
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.get('/api/retrieve/player/:id', async function (req, res) {
     try {
         var query = { id: parseInt(req.params.id) };
@@ -154,6 +205,7 @@ app.get('/api/retrieve/match/:id', async function (req, res) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 app.get('/api/retrieve/matchByDate/:date', async function (req, res) {
     try {
