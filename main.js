@@ -69,6 +69,17 @@ app.get('/api/insert/leagues', async function (req, res) {
     }
 });
 
+app.get('/api/update/leagues', async function (req, res) {
+    try {
+        await dbName.collection("leagues").deleteMany();
+        var result = await insertLeaguesInMongoDb(dbName)
+        res.json(result);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.get('/api/insert/coaches', async function (req, res) {
     try {
         if (dbName !== undefined) {
