@@ -152,6 +152,17 @@ app.get('/api/retrieve/player/:id', async function (req, res) {
     }
 });
 
+app.get('/api/retrieve/players', async function (req, res) {
+    try {
+        const queryCursor = dbName.collection("players").find();
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.get('/api/retrieve/playersByTeam/:team', async function (req, res) {
     try {
         var query = { id: parseInt(req.params.team) };
