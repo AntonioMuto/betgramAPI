@@ -69,6 +69,17 @@ app.get('/api/insert/leagues', async function (req, res) {
     }
 });
 
+app.get('/api/retrieve/leagues', async function (req, res) {
+    try {
+        const queryCursor = dbName.collection("leagues").find();
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.get('/api/update/leagues', async function (req, res) {
     try {
         await dbName.collection("leagues").deleteMany();
