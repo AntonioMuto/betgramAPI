@@ -105,6 +105,17 @@ app.get('/api/insert/coaches', async function (req, res) {
     }
 });
 
+app.get('/api/retrieve/teams', async function (req, res) {
+    try {
+        const queryCursor = dbName.collection("teams").find();
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 app.get('/api/retrieve/team/:id', async function (req, res) {
     try {
         var query = { id: parseInt(req.params.id) };
