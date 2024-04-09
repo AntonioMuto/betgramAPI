@@ -2,6 +2,8 @@ const { MongoClient } = require('mongodb');
 const dotenv = require('dotenv');
 const request = require('request');
 const url = 'mongodb://localhost:27017';
+const cron = require('node-cron');
+const axios = require('axios');
 var express = require('express');
 
 var app = express();
@@ -255,6 +257,24 @@ app.get('/api/retrieve/matchesBySeason/:season/page/:pageNumber', async function
                 $group: {
                     _id: '$round_id',
                     matches: { $push: '$$ROOT' }
+                }
+            },
+            {
+                $project: {
+                    matches: {
+                        $map: {
+                            input: '$matches',
+                            as: 'match',
+                            in: {
+                                id: '$$match.id',
+                                starting_at: '$$match.starting_at',
+                                participants:
+                                    '$$match.participants',
+                                scores: '$$match.scores',
+                                state: '$$match.state'
+                            }
+                        }
+                    }
                 }
             },
             { $sort: { "_id": 1 } }
@@ -629,3 +649,12 @@ async function callApiCoaches(arrayDataCompleto) {
         resolve(arrayDataCompleto);
     });
 }
+
+// async function callUpdateLeagues() {
+//     try {
+//         const response = await axios.get('http://localhost:3000/api/retrieve/leagues');
+//         console.log('Chiamata GET eseguita con successo:', response.data);
+//     } catch (error) {
+//         console.error('Errore durante la chiamata GET:', error);
+//     }
+// }
