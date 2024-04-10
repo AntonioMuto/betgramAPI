@@ -289,6 +289,30 @@ app.get('/api/retrieve/matchesBySeason/:season/page/:pageNumber', async function
     }
 });
 
+
+app.get('/api/retrieve/matchesByTeam/:team', async function (req, res) {
+    try {
+        var query = [
+            { $unwind: { path: '$participants' } },
+            { $match: { 'participants.id': 625 } },
+            {
+                $group: {
+                    _id: '$participants.id',
+                    fieldN: { $push: '$$ROOT' }
+                }
+            },
+            { $unwind: { path: '$fieldN' } },
+            { $sort: { 'fieldN.round_id': 1 } }
+        ];
+        const queryCursor = dbName.collection("matches").aggregate(query);
+        const queryResult = await queryCursor.toArray();
+        res.status(200).json({ queryResult });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 async function insertPlayerInMongoDb(db) {
     const arrayTeam = [
         1628,
