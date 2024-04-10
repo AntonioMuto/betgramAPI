@@ -298,11 +298,29 @@ app.get('/api/retrieve/matchesByTeam/:team', async function (req, res) {
             {
                 $group: {
                     _id: '$participants.id',
-                    fieldN: { $push: '$$ROOT' }
+                    matches: { $push: '$$ROOT' }
                 }
             },
-            { $unwind: { path: '$fieldN' } },
-            { $sort: { 'fieldN.round_id': 1 } }
+            {
+                $project: {
+                    matches: {
+                        $map: {
+                            input: '$matches',
+                            as: 'match',
+                            in: {
+                                id: '$$match.id',
+                                starting_at: '$$match.starting_at',
+                                participants:
+                                    '$$match.participants',
+                                scores: '$$match.scores',
+                                state: '$$match.state'
+                            }
+                        }
+                    }
+                }
+            },
+            { $unwind: { path: '$matches' } },
+            { $sort: { 'matches.round_id': 1 } }
         ];
         const queryCursor = dbName.collection("matches").aggregate(query);
         const queryResult = await queryCursor.toArray();
