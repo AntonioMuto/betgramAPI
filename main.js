@@ -294,7 +294,7 @@ app.get('/api/retrieve/matchesByTeam/:team', async function (req, res) {
     try {
         var query = [
             { $unwind: { path: '$participants' } },
-            { $match: { 'participants.id': 625 } },
+            { $match: { 'participants.id': parseInt(req.params.team) } },
             {
                 $group: {
                     _id: '$participants.id',
