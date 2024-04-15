@@ -5,6 +5,7 @@ const url = 'mongodb://localhost:27017';
 const cron = require('node-cron');
 const axios = require('axios');
 var express = require('express');
+const zlib = require('zlib');
 
 var app = express();
 app.use(express.json());
@@ -64,6 +65,7 @@ app.get('/api/insert/players', async function (req, res) {
 app.get('/api/insert/leagues', async function (req, res) {
     try {
         var result = await insertLeaguesInMongoDb(dbName)
+
         res.json(result);
     } catch (error) {
         console.error(error);
@@ -111,7 +113,8 @@ app.get('/api/retrieve/teams', async function (req, res) {
     try {
         const queryCursor = dbName.collection("teams").find();
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -123,7 +126,8 @@ app.get('/api/retrieve/team/:id', async function (req, res) {
         var query = { id: parseInt(req.params.id) };
         const queryCursor = dbName.collection("teams").find(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -135,7 +139,8 @@ app.get('/api/retrieve/teamsByLeague/:league', async function (req, res) {
         var query = { activeseasons: { $elemMatch: { "league_id": parseInt(req.params.league) } } };
         const queryCursor = dbName.collection("teams").find(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -169,7 +174,8 @@ app.get('/api/retrieve/player/:id', async function (req, res) {
         var query = { id: parseInt(req.params.id) };
         const queryCursor = dbName.collection("players").find(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -180,7 +186,13 @@ app.get('/api/retrieve/players', async function (req, res) {
     try {
         const queryCursor = dbName.collection("players").find();
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        zlib.gzip(jsonResult, (err, gzipResult) => {
+            if (err) throw err;
+            res.setHeader('Content-Encoding', 'gzip');
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).send(gzipResult);
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -192,7 +204,8 @@ app.get('/api/retrieve/playersByTeam/:team', async function (req, res) {
         var query = { id: parseInt(req.params.team) };
         const queryCursor = dbName.collection("players").find(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -204,7 +217,8 @@ app.get('/api/retrieve/league/:id', async function (req, res) {
         var query = { id: parseInt(req.params.id) };
         const queryCursor = dbName.collection("leagues").find(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -216,7 +230,8 @@ app.get('/api/retrieve/coaches/:id', async function (req, res) {
         var query = { id: parseInt(req.params.id) };
         const queryCursor = dbName.collection("coaches").find(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -228,7 +243,8 @@ app.get('/api/retrieve/match/:id', async function (req, res) {
         var query = { id: parseInt(req.params.id) };
         const queryCursor = dbName.collection("matches").find(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -241,7 +257,8 @@ app.get('/api/retrieve/matchesByDate/:date', async function (req, res) {
         const query = { starting_at: { $regex: new RegExp(`^${req.params.date}`) } };
         const queryCursor = dbName.collection("matches").find(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -282,7 +299,8 @@ app.get('/api/retrieve/matchesBySeason/:season/page/:pageNumber', async function
         const queryCursor = dbName.collection("matches").aggregate(query);
         const queryResult = await queryCursor.toArray();
         const round = queryResult[parseInt(req.params.pageNumber) - 1];
-        res.status(200).json({ round });
+        const jsonResult = JSON.stringify({ round });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -290,41 +308,60 @@ app.get('/api/retrieve/matchesBySeason/:season/page/:pageNumber', async function
 });
 
 
-app.get('/api/retrieve/matchesByTeam/:team', async function (req, res) {
+app.get('/api/retrieve/matches/season/:season/team/:team', async function (req, res) {
     try {
         var query = [
-            { $unwind: { path: '$participants' } },
-            { $match: { 'participants.id': parseInt(req.params.team) } },
             {
-                $group: {
-                    _id: '$participants.id',
-                    matches: { $push: '$$ROOT' }
+                $match: {
+                    'participants.id': 625,
+                    season_id: 21818
                 }
             },
             {
                 $project: {
-                    matches: {
+                    id: 1,
+                    league_id: 1,
+                    season_id: 1,
+                    stage_id: 1,
+                    round_id: 1,
+                    starting_at: 1,
+                    participants: {
                         $map: {
-                            input: '$matches',
-                            as: 'match',
+                            input: '$participants',
+                            as: 'team',
                             in: {
-                                id: '$$match.id',
-                                starting_at: '$$match.starting_at',
-                                participants:
-                                    '$$match.participants',
-                                scores: '$$match.scores',
-                                state: '$$match.state'
+                                id: '$$team.id',
+                                name: '$$team.name',
+                                logo: '$$team.image_path',
+                                location: '$$team.meta.location',
+                                winner: '$$team.meta.winner'
                             }
                         }
-                    }
+                    },
+                    scores: {
+                        $map: {
+                            input: '$scores',
+                            as: 'score',
+                            in: {
+                                id: '$$score.id',
+                                name: '$$score.participant_id',
+                                goals: '$$score.score.goals',
+                                location:
+                                    '$$score.score.participant',
+                                type_id: '$$score.type_id',
+                                description: '$$score.description'
+                            }
+                        }
+                    },
+                    state: 1
                 }
             },
-            { $unwind: { path: '$matches' } },
-            { $sort: { 'matches.round_id': 1 } }
+            { $sort: { round_id: 1 } }
         ];
         const queryCursor = dbName.collection("matches").aggregate(query);
         const queryResult = await queryCursor.toArray();
-        res.status(200).json({ queryResult });
+        const jsonResult = JSON.stringify({ queryResult });
+        await compressResponse(jsonResult, res);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -700,3 +737,13 @@ async function callApiCoaches(arrayDataCompleto) {
 //         console.error('Errore durante la chiamata GET:', error);
 //     }
 // }
+
+
+async function compressResponse(jsonResult, res){
+    zlib.gzip(jsonResult, (err, gzipResult) => {
+        if (err) throw err;
+        res.setHeader('Content-Encoding', 'gzip');
+        res.setHeader('Content-Type', 'application/json');
+        res.status(200).send(gzipResult);
+    });
+}
