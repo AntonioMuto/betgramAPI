@@ -147,22 +147,14 @@ app.get('/api/retrieve/teamsByLeague/:league', async function (req, res) {
     }
 });
 
-app.get('/api/trytry/:page', async function (req, res) {
+app.get('/api/trytry', async function (req, res) {
     try {
         var query = [
-            { $match: { season_id: 21730 } },
-            {
-                $group: {
-                    _id: '$round_id',
-                    matches: { $push: '$$ROOT' }
-                }
-            },
-            { $sort: { "_id": 1 } }
+            { $unset: "comments" },
         ];
         const queryCursor = dbName.collection("matches").aggregate(query);
         const queryResult = await queryCursor.toArray();
-        const round = queryResult[req.params.page];
-        res.status(200).json({ round });
+        res.status(200).json({ queryCursor });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -254,8 +246,54 @@ app.get('/api/retrieve/match/:id', async function (req, res) {
 
 app.get('/api/retrieve/matchesByDate/:date', async function (req, res) {
     try {
-        const query = { starting_at: { $regex: new RegExp(`^${req.params.date}`) } };
-        const queryCursor = dbName.collection("matches").find(query);
+        const query = [
+            {
+              $match: {
+                starting_at: { $regex: `^${req.params.date}` }
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                id: 1,
+                league_id: 1,
+                starting_at: 1,
+                participants: {
+                  id: 1,
+                  name: 1,
+                  image_path: 1
+                },
+                scores: {
+                  $map: {
+                    input: {
+                      $filter: {
+                        input: '$scores',
+                        as: 'score',
+                        cond: {
+                          $eq: ['$$score.type_id', 1525]
+                        }
+                      }
+                    },
+                    as: 'score',
+                    in: {
+                      type_id: '$$score.type_id',
+                      participant_id:
+                        '$$score.participant_id',
+                      score: '$$score.score'
+                    }
+                  }
+                },
+                'state.developer_name': 1
+              }
+            },
+            {
+                $group: {
+                    _id: '$league_id',
+                    matches: { $push: '$$ROOT' }
+                }
+            }
+          ];
+        const queryCursor = dbName.collection("matches").aggregate(query);
         const queryResult = await queryCursor.toArray();
         const jsonResult = JSON.stringify({ queryResult });
         await compressResponse(jsonResult, res);
@@ -739,7 +777,7 @@ async function callApiCoaches(arrayDataCompleto) {
 // }
 
 
-async function compressResponse(jsonResult, res){
+async function compressResponse(jsonResult, res) {
     zlib.gzip(jsonResult, (err, gzipResult) => {
         if (err) throw err;
         res.setHeader('Content-Encoding', 'gzip');
