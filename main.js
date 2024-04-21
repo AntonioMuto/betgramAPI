@@ -359,7 +359,8 @@ app.get('/api/retrieve/matchesByDate/:date', async function (req, res) {
                     participants: {
                         id: 1,
                         name: 1,
-                        image_path: 1
+                        image_path: 1,
+                        meta: 1
                     },
                     scores: {
                         $map: {
