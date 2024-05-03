@@ -309,12 +309,39 @@ app.get('/api/retrieve/match/:id/statistics', async function (req, res) {
 app.get('/api/retrieve/match/:id/lineups', async function (req, res) {
     try {
         var query = [
-            { $match: { id: parseInt(req.params.id) } },
+            { $match: { id: 18845449 } },
             { $unwind: { path: '$lineups' } },
             {
                 $group: {
                     _id: '$lineups.team_id',
-                    lineup: { $push: '$lineups' }
+                    lineup: {
+                        $push: {
+                            $cond: [
+                                {
+                                    $ne: [
+                                        '$lineups.formation_field',
+                                        null
+                                    ]
+                                },
+                                '$lineups',
+                                null
+                            ]
+                        }
+                    },
+                    bench: {
+                        $push: {
+                            $cond: [
+                                {
+                                    $eq: [
+                                        '$lineups.formation_field',
+                                        null
+                                    ]
+                                },
+                                '$lineups',
+                                null
+                            ]
+                        }
+                    }
                 }
             },
             {
@@ -328,11 +355,19 @@ app.get('/api/retrieve/match/:id/lineups', async function (req, res) {
                         jersey_number: 1,
                         'player.common_name': 1,
                         'player.image_path': 1
+                    },
+                    bench: {
+                        position_id: 1,
+                        type_id: 1,
+                        player_name: 1,
+                        jersey_number: 1,
+                        'player.common_name': 1,
+                        'player.image_path': 1
                     }
                 }
             }
         ]
-        const queryCursor = dbName.collection("matches").aggregate(query);
+        const queryCursor = dbName.collection("matches").aggregate(query,{ maxTimeMS: 60000, allowDiskUse: true });
         const queryResult = await queryCursor.toArray();
         const jsonResult = JSON.stringify({ queryResult });
         await compressResponse(jsonResult, res);
@@ -781,8 +816,6 @@ async function insetDocumentsByDay(data, db) {
                     const result = await db.collection('matches').insertOne(arrayDataCompleto[index]);
                 }
                 return true;
-                // var result = await insertFile(`${req.params.data}`, content);
-                // result ? res.json({ response: `Match aggiunto ${req.params.data}.json` }) : res.json({ error: "IMPOSSIBILE AGGIUNGERE IL FILE" })
             } else {
                 return false;
             }
@@ -875,9 +908,9 @@ async function callUpdateLeagues() {
 
 cron.schedule('0 1 * * *', () => {
     callUpdateLeagues();
-  }, {
+}, {
     timezone: "Europe/Rome"
-  });
+});
 
 // cron.schedule('0 1 * * *', () => {
 //     callUpdateLeagues();
