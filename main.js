@@ -309,7 +309,7 @@ app.get('/api/retrieve/match/:id/statistics', async function (req, res) {
 app.get('/api/retrieve/match/:id/lineups', async function (req, res) {
     try {
         var query = [
-            { $match: { id: 18845449 } },
+            { $match: { id: parseInt(req.params.id) } },
             { $unwind: { path: '$lineups' } },
             {
                 $group: {
