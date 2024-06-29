@@ -31,7 +31,6 @@ async function connectToMongoDB() {
 
 connectToMongoDB();
 
-
 app.get('/api/insert/match/:data', async function (req, res) {
     try {
         var result = await insetDocumentsByDay(req.params.data, dbName);

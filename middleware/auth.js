@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
     }
 
     try {
-        if(token === 'antonio'){
+        if(token === process.env.SPECIAL_TOKEN){
             next();
         } else{
             res.status(400).json({ message: 'Invalid token.' });

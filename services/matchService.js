@@ -1,4 +1,4 @@
-const getDb = require('../config/database').getDb; // Assicurati di avere un file per gestire la connessione al database
+const getDb = require('../config/database').getDb;
 
 const getMatchStatistics = async (matchId) => {
     try {

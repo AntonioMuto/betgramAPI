@@ -6,7 +6,12 @@ const requestLogger = require('./middleware/requestLogger');
 const responseLogger = require('./middleware/responseLogger'); // Importa il middleware
 const auth = require('./middleware/auth');
 const requestId = require('./middleware/requestid'); // Importa il middleware per generare un ID unico
+const fs = require('fs');
+const path = require('path');
+const cron = require('node-cron');
 
+const responsesLogFilePath = path.join(__dirname, 'logs/responses.log');
+const errorsLogFilePath = path.join(__dirname, 'logs/errors.log');
 
 dotenv.config();
 
@@ -47,3 +52,21 @@ app.use(errorHandler);
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+
+cron.schedule('0 2 */3 * *', () => {
+    clearLogs(responsesLogFilePath);
+    clearLogs(errorsLogFilePath);
+}, {
+    timezone: "Europe/Rome"
+});
+
+
+const clearLogs = (filePath) => {
+    fs.writeFile(filePath, '', (err) => {
+        if (err) {
+            console.error(`Errore durante la pulizia del file di log ${filePath}:`, err);
+        } else {
+            console.log(`File di log ${filePath} ripulito con successo.`);
+        }
+    });
+};
