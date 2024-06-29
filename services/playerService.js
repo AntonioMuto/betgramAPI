@@ -18,6 +18,25 @@ const getPlayerById = async (playerId) => {
     }
 };
 
+const getPlayerByTeam = async (teamId) => {
+    try {
+        const db = await getDb();
+        var query = { team_id: parseInt(teamId) };
+        var sorting = { position_id: 1 };
+        const queryCursor = db.collection("players").find(query).sort(sorting);
+        const queryResult = await queryCursor.toArray();
+        if (queryResult.length === 0) {
+            return {
+                status: "error",
+                error: `Players not founds`
+            };
+        }
+        return queryResult;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
 const getPlayers = async () => {
     try {
         const db = await getDb();
@@ -37,5 +56,6 @@ const getPlayers = async () => {
 
 module.exports = {
     getPlayerById,
+    getPlayerByTeam,
     getPlayers
 };

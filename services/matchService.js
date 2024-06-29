@@ -164,6 +164,24 @@ const getMatchLineups = async (matchId) => {
     }
 };
 
+const getMatch = async (matchId) => {
+    try {
+        const db = await getDb();
+        const query = { id: parseInt(matchId) };
+        const queryCursor = await db.collection("matches").find(query);
+        const queryResult = await queryCursor.toArray();
+        if (queryResult.length === 0) {
+            return {
+                status: "error",
+                error: `Match ID '${matchId}' not found`
+            };
+        }
+        return queryResult[0];
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
 const getMatchesByDay = async (date) => {
     try {
         const db = await getDb();
@@ -241,5 +259,6 @@ module.exports = {
     getMatchStatistics,
     getMatchDetails,
     getMatchesByDay,
-    getMatchLineups
+    getMatchLineups,
+    getMatch
 };

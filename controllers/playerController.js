@@ -10,6 +10,16 @@ exports.getPlayerById = async (req, res, next) => {
     }
 };
 
+exports.getPlayerByTeam = async (req, res, next) => {
+    try {
+        const teamId = req.params.team;
+        const player = await playerService.getPlayerByTeam(teamId);
+        res.json(player);
+    } catch (error) {
+        next(error);
+    }
+};
+
 exports.getPlayers = async (req, res, next) => {
     try {
         const players = await playerService.getPlayers();

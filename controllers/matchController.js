@@ -30,6 +30,16 @@ exports.getMatchLineups = async (req, res, next) => {
     }
 };
 
+exports.getMatch = async (req, res, next) => {
+    try {
+        const matchId = req.params.id;
+        const match = await matchService.getMatch(matchId);
+        res.json(match);
+    } catch (error) {
+        next(error);
+    }
+};
+
 exports.getMatchesByDay = async (req, res, next) => {
     try {
         const date = req.params.data;
