@@ -1,0 +1,39 @@
+[Request ID: 7246ecbc-5819-45bf-a3f7-a20f5f037656] - 2024-06-29T10:00:33.498Z
+GET /api/matches/retrieve/18845449/details ::1 - Status: 500 - Response: {"status":"error","message":"TypeError: db.collections(...).aggregate is not a function"}
+
+[Request ID: f4fa7f20-9315-472f-9b10-5c96ed3140d7] - 2024-06-29T10:00:35.053Z
+GET /api/matches/retrieve/18845449/details ::1 - Status: 500 - Response: {"status":"error","message":"TypeError: db.collections(...).aggregate is not a function"}
+
+[5b162a12-d690-4771-a55a-f5dc42e37d8f] - 2024-06-29T10:02:18.433Z
+GET /api/matches/retrieve/18845449/details ::1 - Status: 500 - Response: {"status":"error","message":"TypeError: db.collections(...).aggregate is not a function"}
+
+[3dc5e97d-322e-42a7-b4e9-b864f27663f1] - 2024-06-29T10:06:01.050Z
+GET /api/matches/retrieve/18845449/details ::1 - Status: 500 - Response: {"status":"error","message":"TypeError: db.collections(...).aggregate is not a function"}
+
+[a88e0ded-fcb3-4bab-b331-c3cda0376d80] - 2024-06-29T10:08:01.527Z
+GET /api/matches/retrieve/18845449/details ::1 - Status: 500 - Response: {"status":"error","message":"TypeError: db.collections(...).aggregate is not a function"}
+
+[b2b5ebb5-4c56-42df-bb72-97b02c20fcb0] - 2024-06-29T10:16:10.038Z
+GET /api/matches/retrieve/18845449/statistics ::1 - Status: 500 - Response: {"status":"error","message":"ReferenceError: matchId is not defined"}
+
+[8b7be54d-831c-496d-8e5b-7acca9924539] - 2024-06-29T10:16:44.921Z
+GET /api/matches/retrieve/18845449/statistics ::1 - Status: 500 - Response: {"status":"error","message":"matchId is not defined"}
+
+[59678885-33c2-4b94-9941-fa10cafa514b] - 2024-06-29T10:26:59.318Z
+GET /api/matches/2024-05-01 ::1 - Status: 500 - Response: {"status":"error","message":"ReferenceError: db is not defined"}
+
+[7da3cdfd-f82e-4cd2-9592-638e65bdebd1] - 2024-06-29T10:27:45.801Z
+GET /api/matches/2023-12-12 ::1 - Status: 500 - Response: {"status":"error","message":"ReferenceError: db is not defined"}
+
+[72818ad9-a3a9-4d1f-92c5-5d32f2ea2ba5] - 2024-06-29T10:29:55.105Z
+GET /api/matches/2023-12-12 ::1 - Status: 500 - Response: {"request":"72818ad9-a3a9-4d1f-92c5-5d32f2ea2ba5","status":"error","message":"MongoServerError: The field 'league_id' must be an accumulator object"}
+
+[7ac2b9bb-fbe8-41fa-9539-9a3ce56c7c3d] - 2024-06-29T10:30:11.097Z
+GET /api/matches/2023-12-12 ::1 - Status: 500 - Response: {"request":"7ac2b9bb-fbe8-41fa-9539-9a3ce56c7c3d","status":"error","message":"MongoServerError: The field '_league' must be an accumulator object"}
+
+[1cdaca3b-aaba-4085-bbab-afe17dde3214] - 2024-06-29T10:46:20.161Z
+GET /api/teams/retrieve/2 ::1 - Status: 500 - Response: {"request":"1cdaca3b-aaba-4085-bbab-afe17dde3214","status":"error","message":"ReferenceError: getDb is not defined"}
+
+[1712caa5-4ab4-487f-ad53-4d6d77b68a6d] - 2024-06-29T10:48:10.485Z
+GET /api/teams/retrieve/57 ::1 - Status: 500 - Response: {"request":"1712caa5-4ab4-487f-ad53-4d6d77b68a6d","status":"error","message":"MongoInvalidArgumentError: Query filter must be a plain object or ObjectId"}
+

@@ -1,0 +1,114 @@
+[Request ID: 7246ecbc-5819-45bf-a3f7-a20f5f037656] - 2024-06-29T10:00:33.494Z
+GET /api/matches/retrieve/18845449/details ::1
+Error: TypeError: db.collections(...).aggregate is not a function
+Stack: Error: TypeError: db.collections(...).aggregate is not a function
+    at Object.getMatchDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:64:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.getMatchesDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:16:25)
+
+[Request ID: f4fa7f20-9315-472f-9b10-5c96ed3140d7] - 2024-06-29T10:00:35.052Z
+GET /api/matches/retrieve/18845449/details ::1
+Error: TypeError: db.collections(...).aggregate is not a function
+Stack: Error: TypeError: db.collections(...).aggregate is not a function
+    at Object.getMatchDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:64:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.getMatchesDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:16:25)
+
+[5b162a12-d690-4771-a55a-f5dc42e37d8f] - 2024-06-29T10:02:18.429Z
+GET /api/matches/retrieve/18845449/details ::1
+Error: TypeError: db.collections(...).aggregate is not a function
+Stack: Error: TypeError: db.collections(...).aggregate is not a function
+    at Object.getMatchDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:64:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.getMatchesDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:16:25)
+
+[3dc5e97d-322e-42a7-b4e9-b864f27663f1] - 2024-06-29T10:06:01.045Z
+Error: TypeError: db.collections(...).aggregate is not a function
+Stack: Error: TypeError: db.collections(...).aggregate is not a function
+    at Object.getMatchDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:64:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.getMatchesDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:16:25)
+
+[a88e0ded-fcb3-4bab-b331-c3cda0376d80] - 2024-06-29T10:08:01.527Z
+Error: TypeError: db.collections(...).aggregate is not a function
+Stack: Error: TypeError: db.collections(...).aggregate is not a function
+    at Object.getMatchDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:64:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.getMatchesDetails (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:16:25)
+
+[b2b5ebb5-4c56-42df-bb72-97b02c20fcb0] - 2024-06-29T10:16:10.033Z
+Error: ReferenceError: matchId is not defined
+Stack: Error: ReferenceError: matchId is not defined
+    at Object.getMatchStatistics (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:30:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.getMatchStatistics (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:5:24)
+
+[8b7be54d-831c-496d-8e5b-7acca9924539] - 2024-06-29T10:16:44.917Z
+Error: matchId is not defined
+Stack: ReferenceError: matchId is not defined
+    at exports.getMatchStatistics (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:6:60)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+[59678885-33c2-4b94-9941-fa10cafa514b] - 2024-06-29T10:26:59.313Z
+Error: ReferenceError: db is not defined
+Stack: Error: ReferenceError: db is not defined
+    at Object.getMatchesByDay (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:228:15)
+    at exports.getMatchesByDay (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:36:44)
+    at Layer.handle [as handle_request] (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:284:15
+    at param (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:376:14)
+    at Function.process_params (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:421:3)
+
+[7da3cdfd-f82e-4cd2-9592-638e65bdebd1] - 2024-06-29T10:27:45.800Z
+Error: ReferenceError: db is not defined
+Stack: Error: ReferenceError: db is not defined
+    at Object.getMatchesByDay (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:228:15)
+    at exports.getMatchesByDay (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:36:44)
+    at Layer.handle [as handle_request] (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:284:15
+    at param (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:376:14)
+    at Function.process_params (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:421:3)
+
+[72818ad9-a3a9-4d1f-92c5-5d32f2ea2ba5] - 2024-06-29T10:29:55.100Z
+Error: MongoServerError: The field 'league_id' must be an accumulator object
+Stack: Error: MongoServerError: The field 'league_id' must be an accumulator object
+    at Object.getMatchesByDay (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:229:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.getMatchesByDay (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:36:25)
+
+[7ac2b9bb-fbe8-41fa-9539-9a3ce56c7c3d] - 2024-06-29T10:30:11.093Z
+Error: MongoServerError: The field '_league' must be an accumulator object
+Stack: Error: MongoServerError: The field '_league' must be an accumulator object
+    at Object.getMatchesByDay (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\matchService.js:229:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.getMatchesByDay (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\matchController.js:36:25)
+
+[1cdaca3b-aaba-4085-bbab-afe17dde3214] - 2024-06-29T10:46:20.157Z
+Error: ReferenceError: getDb is not defined
+Stack: Error: ReferenceError: getDb is not defined
+    at Object.getTeamById (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\teamService.js:18:15)
+    at exports.getTeamById (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\teamController.js:6:40)
+    at Layer.handle [as handle_request] (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\layer.js:95:5)
+    at C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:284:15
+    at param (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:365:14)
+    at param (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:376:14)
+    at Function.process_params (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\node_modules\express\lib\router\index.js:421:3)
+
+[1712caa5-4ab4-487f-ad53-4d6d77b68a6d] - 2024-06-29T10:48:10.482Z
+Error: MongoInvalidArgumentError: Query filter must be a plain object or ObjectId
+Stack: Error: MongoInvalidArgumentError: Query filter must be a plain object or ObjectId
+    at Object.getTeamById (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\services\teamService.js:19:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async exports.getTeamById (C:\Users\maxsg\OneDrive\Desktop\Project_2024\MongoDB_FIll-Oracle\mongoDBFiller\controllers\teamController.js:6:22)
+
