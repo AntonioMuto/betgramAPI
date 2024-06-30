@@ -242,7 +242,7 @@ const getMatchesByDay = async (date) => {
                 error: `anyone match in data '${date}'`
             };
         }
-        return queryResult[0];
+        return queryResult;
     } catch (error) {
         throw new Error(error);
     }
