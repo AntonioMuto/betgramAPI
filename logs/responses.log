@@ -1,3 +1,24 @@
 [da3e6f1b-ba9f-43b1-8308-b0aa7d31e55d] - 2024-06-29T13:50:18.471Z
 GET /retrieve/1 ::1 - Status: 401 - Response: {"message":"Access denied. No token provided."}
 
+[004ec743-e5c9-4b0c-b8e1-5bf2959dadc5] - 2024-07-02T21:56:35.279Z
+GET /api/mega/folders ::1 - Status: 500 - Response: {"request":"004ec743-e5c9-4b0c-b8e1-5bf2959dadc5","status":"error","message":"ReferenceError: elementName is not defined"}
+
+[1728c871-9173-4423-b3a8-4eae27a7dca8] - 2024-07-02T21:57:56.244Z
+GET /api/mega/folders ::1 - Status: 500 - Response: {"request":"1728c871-9173-4423-b3a8-4eae27a7dca8","status":"error","message":"Converting circular structure to JSON\n    --> starting at object with constructor 'Array'\n    |     index 0 -> object with constructor '_MutableFile'\n    |     property 'parent' -> object with constructor '_MutableFile'\n    --- property 'children' closes the circle"}
+
+[b7942194-aa6c-43ba-b1d3-5195c3135253] - 2024-07-02T22:03:04.778Z
+GET /api/mega/elements ::1 - Status: 500 - Response: {"request":"b7942194-aa6c-43ba-b1d3-5195c3135253","status":"error","message":"Converting circular structure to JSON\n    --> starting at object with constructor '_MutableFile'\n    |     property 'parent' -> object with constructor '_MutableFile'\n    |     property 'children' -> object with constructor 'Array'\n    --- index 0 closes the circle"}
+
+[09e92f07-4b85-478b-8eec-65f5594342aa] - 2024-07-02T22:09:21.530Z
+GET /api/mega/download/NvtTXbYD ::1 - Status: 500 - Response: {"request":"09e92f07-4b85-478b-8eec-65f5594342aa","status":"error","message":"Error in downloadFile: fs is not defined"}
+
+[205d7e88-4b45-4619-af01-007a523267e2] - 2024-07-02T22:12:20.765Z
+GET /api/mega/download/NvtTXbYD ::1 - Status: 500 - Response: {"request":"205d7e88-4b45-4619-af01-007a523267e2","status":"error","message":"res.status is not a function"}
+
+[61df65b0-8d5f-47f6-8cee-599a785518c9] - 2024-07-02T22:15:20.219Z
+GET /api/mega/download/NvtTXbYD ::1 - Status: 500 - Response: {"request":"61df65b0-8d5f-47f6-8cee-599a785518c9","status":"error","message":"Error in downloadFileAsBase64: streamToPromise is not defined"}
+
+[f962a3e2-cd81-4f98-bf11-472a21c9372b] - 2024-07-02T22:21:36.146Z
+GET /api/mega/download/NvtTXbYD ::1 - Status: 500 - Response: {"request":"f962a3e2-cd81-4f98-bf11-472a21c9372b","status":"error","message":"Converting circular structure to JSON\n    --> starting at object with constructor '_MutableFile'\n    |     property 'children' -> object with constructor 'Array'\n    |     index 0 -> object with constructor '_MutableFile'\n    --- property 'parent' closes the circle"}
+

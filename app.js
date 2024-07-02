@@ -39,6 +39,7 @@ const teamRoutes = require('./routes/teamRoutes');
 const leagueRoutes = require('./routes/leagueRoutes');
 const playerRoutes = require('./routes/playerRoutes');
 const coachRoutes = require('./routes/coachRoutes');
+const megaRoutes = require('./routes/megaRoutes');
 
 // Apply authentication middleware to protected routes
 app.use('/api/matches', auth, matchRoutes);
@@ -46,6 +47,7 @@ app.use('/api/teams', auth, teamRoutes);
 app.use('/api/leagues', auth, leagueRoutes);
 app.use('/api/players', auth, playerRoutes);
 app.use('/api/coaches', auth, coachRoutes);
+app.use('/api/mega', auth, megaRoutes);
 
 
 // Error handling middleware
