@@ -25,6 +25,10 @@ async function connectToMega() {
 connectToMega().catch(err => console.error('Error connecting to MEGA:', err));
 
 const getMegaStorage = async () => {
+    if(!storage){
+        await connectToMega();
+        return storage;
+    }
     return storage;
 };
 

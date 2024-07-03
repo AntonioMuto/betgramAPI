@@ -1,5 +1,11 @@
 const getMegaStorage = require('../config/mega').getMegaStorage;
+const MegaUtils = require('../utils/megaUtils');
 const streamToPromise = require('stream-to-promise');
+const fs = require('fs');
+const path = require('path');
+const User = require('../models/User');
+const Bet = require('../models/Bet');
+
 
 const getFolders = async () => {
     try {
@@ -76,10 +82,58 @@ const downloadFile = async (nodeId) => {
     }
 };
 
+const createUser = async (id) => {
+    try {
+
+        const usersFolder = await MegaUtils.retrieveFolder('USERS');
+        const exists = await MegaUtils.checkIfElementAlredyExists(usersFolder, id);
+        if (exists) {
+            throw new Error('User already exists');
+        }
+        const user = new User(id, []);
+        const userData = JSON.stringify(user, null, 2);
+        await usersFolder.upload(`${id}.json`, userData);
+        return true;
+
+    } catch (error) {
+        throw new Error(`Error in createUser: ${error.message}`);
+    }
+};
+
+const createBet = async (id) => {
+    try {
+
+        const betFolder = await MegaUtils.retrieveFolder('BETS');
+        const exists = await MegaUtils.checkIfElementAlredyExists(betFolder, id);
+        if (exists) {
+            throw new Error('User already exists');
+        }
+        const bet = new Bet(id, 0, []);
+        const betData = JSON.stringify(bet, null, 2);
+        await betFolder.upload(`${id}.json`, betData);
+        return true;
+    } catch (error) {
+        throw new Error(`Error in createBet: ${error.message}`);
+    }
+};
+
+const deleteBet = async (id) => {
+    try {
+        const betFolder = await MegaUtils.retrieveFolder('BETS');
+        const file = await MegaUtils.findFile(betFolder, id);
+        await file.delete();
+        return true;
+    } catch (error) {
+        throw new Error(`Error in deleteBet: ${error.message}`);
+    }
+};
 
 
 module.exports = {
     getFolders,
     getElements,
-    downloadFile
+    downloadFile,
+    createUser,
+    createBet,
+    deleteBet
 };

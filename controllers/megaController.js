@@ -27,3 +27,34 @@ exports.downloadElement = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.createUser = async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const uploaded = await megaService.createUser(id);
+        res.json( {uploaded: uploaded} );
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.createBet = async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const uploaded = await megaService.createBet(id);
+        res.json( {uploaded: uploaded} );
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+exports.deleteBet = async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const deleted = await megaService.deleteBet(id);
+        res.json( {deleted: deleted} );
+    } catch (error) {
+        next(error);
+    }
+};
