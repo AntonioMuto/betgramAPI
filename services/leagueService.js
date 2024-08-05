@@ -1,35 +1,46 @@
 const getDb = require('../config/database').getDb;
+const axios = require('axios');
+
+const API_URL = process.env.API_URL;
+const INFO = process.env.INFO;
 
 const getLeagueById = async (leagueId) => {
     try {
-        const db = await getDb();
-        var query = { id: parseInt(leagueId) };
-        const queryCursor = db.collection("leagues").find(query);
-        const queryResult = await queryCursor.toArray();
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: `League ID '${leagueId}' not found`
-            };
-        }
-        return queryResult[0];
+        const response = await axios.get(`${API_URL}/leagues?id=${leagueId}&${INFO}`);
+        let league = response.data.details;
+        league.breadcrumbJSONLD = undefined;
+        league.faqJSONLD = undefined;
+        return league;
     } catch (error) {
         throw new Error(error);
     }
 };
 
-const getLeagues = async () => {
+const getLeagueTableById = async (leagueId) => {
     try {
-        const db = await getDb();
-        const queryCursor = db.collection("leagues").find();
-        const queryResult = await queryCursor.toArray();
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: ` Leagues not founds`
-            };
-        }
-        return queryResult;
+        const response = await axios.get(`${API_URL}/leagues?id=${leagueId}&${INFO}`);
+        let league = response.data.table;
+        return league;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const getLeagueTransfersById = async (leagueId) => {
+    try {
+        const response = await axios.get(`${API_URL}/leagues?id=${leagueId}&${INFO}`);
+        let league = response.data.transfers;
+        return league;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const getLeagueFixturesById = async (leagueId) => {
+    try {
+        const response = await axios.get(`${API_URL}/leagues?id=${leagueId}&${INFO}`);
+        let league = response.data.matches.allMatches;
+        return league;
     } catch (error) {
         throw new Error(error);
     }
@@ -37,5 +48,7 @@ const getLeagues = async () => {
 
 module.exports = {
     getLeagueById,
-    getLeagues
+    getLeagueTableById,
+    getLeagueTransfersById,
+    getLeagueFixturesById
 };

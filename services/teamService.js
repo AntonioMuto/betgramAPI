@@ -1,35 +1,51 @@
 const getDb = require('../config/database').getDb;
+const axios = require('axios');
+const TeamUtils = require('../utils/TeamUtils');
+
+const API_URL = process.env.API_URL;
+const INFO = process.env.INFO;
 
 const getTeamById = async (teamId) => {
     try {
-        const db = await getDb();
-        var query = { id: parseInt(teamId) };
-        const queryCursor = db.collection("teams").find(query);
-        const queryResult = await queryCursor.toArray();
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: `Team ID '${teamId}' not found`
-            };
-        }
-        return queryResult[0];
+        const response = await axios.get(`${API_URL}/teams?id=${teamId}&${INFO}`);
+        let team = TeamUtils.remapTeams(response.data);
+        return team;
     } catch (error) {
         throw new Error(error);
     }
 };
 
-const getTeams = async () => {
+const getTeamTableById = async (teamId) => {
     try {
-        const db = await getDb();
-        const queryCursor = db.collection("teams").find();
-        const queryResult = await queryCursor.toArray();
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: ` Teams not founds`
-            };
-        }
-        return queryResult;
+        const response = await axios.get(`${API_URL}/teams?id=${teamId}&${INFO}`);
+        return response.data.table;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const getTeamTransfersById = async (teamId) => {
+    try {
+        const response = await axios.get(`${API_URL}/teams?id=${teamId}&${INFO}`);
+        return response.data.transfers;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const getTeamSquadById = async (teamId) => {
+    try {
+        const response = await axios.get(`${API_URL}/teams?id=${teamId}&${INFO}`);
+        return response.data.squad;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const getAllFixturesById = async (teamId) => {
+    try {
+        const response = await axios.get(`${API_URL}/teams?id=${teamId}&${INFO}`);
+        return response.data.fixtures.allFixtures;
     } catch (error) {
         throw new Error(error);
     }
@@ -37,5 +53,8 @@ const getTeams = async () => {
 
 module.exports = {
     getTeamById,
-    getTeams
+    getTeamTableById,
+    getTeamTransfersById,
+    getTeamSquadById,
+    getAllFixturesById
 };

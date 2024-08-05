@@ -3,8 +3,6 @@ const MegaUtils = require('../utils/megaUtils');
 const streamToPromise = require('stream-to-promise');
 const fs = require('fs');
 const path = require('path');
-const User = require('../models/User');
-const Bet = require('../models/Bet');
 
 
 const getFolders = async () => {

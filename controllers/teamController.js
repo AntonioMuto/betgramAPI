@@ -1,6 +1,6 @@
 const teamService = require('../services/teamService');
 
-exports.getTeamById = async (req, res, next) => {
+exports.getTeamDetailsById = async (req, res, next) => {
     try {
         const teamId = req.params.id;
         const team = await teamService.getTeamById(teamId);
@@ -11,10 +11,38 @@ exports.getTeamById = async (req, res, next) => {
 };
 
 
-exports.getTeams = async (req, res, next) => {
+exports.getTeamTable = async (req, res, next) => {
     try {
-        const teams = await teamService.getTeams();
-        res.json(teams);
+        const teamTable = await teamService.getTeamTableById();
+        res.json(teamTable);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+exports.getTeamTransfers = async (req, res, next) => {
+    try {
+        const teamTransfers = await teamService.getTeamTransfersById();
+        res.json(teamTransfers);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.getTeamSquad = async (req, res, next) => {
+    try {
+        const team = await teamService.getTeamSquadById();
+        res.json(team);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.getAllFixturesById = async (req, res, next) => {
+    try {
+        const fixtures = await teamService.getAllFixturesById();
+        res.json(fixtures);
     } catch (error) {
         next(error);
     }
