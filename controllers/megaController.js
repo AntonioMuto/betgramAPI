@@ -58,3 +58,14 @@ exports.deleteBet = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.getUserById = async (req, res, next) => {
+    try {
+        const id = req.params.id
+        const page = req.params.page
+        const file = await megaService.getUserById(id,page);
+        res.json( file );
+    } catch (error) {
+        next(error);
+    }
+};

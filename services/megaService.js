@@ -128,6 +128,35 @@ const deleteBet = async (id) => {
     }
 };
 
+const getUserById = async (id, page) => {
+    try {
+        const usersFolder = await MegaUtils.retrieveFolder('USERS');
+        const file = await MegaUtils.findFile(usersFolder, id);
+
+        const data = await new Promise((resolve, reject) => {
+            file.download((err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+
+        const jsonString = data.toString('utf8');
+        const parsedData = JSON.parse(jsonString);
+
+         // Prendi solo i primi 20 follower
+         const first20Followers = parsedData.followers.slice(0 + (20 * (page-1)), 20 * page);
+
+         return {
+             ...parsedData,
+             followers: first20Followers
+         };
+    } catch (error) {
+        throw new Error(`Error in getUserById: ${error.message}`);
+    }
+};
 
 module.exports = {
     getFolders,
@@ -135,5 +164,6 @@ module.exports = {
     downloadFile,
     createUser,
     createBet,
-    deleteBet
+    deleteBet,
+    getUserById
 };

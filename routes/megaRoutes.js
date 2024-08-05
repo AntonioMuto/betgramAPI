@@ -6,8 +6,11 @@ router.get('/folders', megaController.getFolders);
 router.get('/elements', megaController.getElements);
 router.get('/download/:id', megaController.downloadElement);
 
-//CREATE
+//USERS
+router.get('/users/retrieve/:id/:page', megaController.getUserById);
 router.put('/users/create/:id', megaController.createUser);
+
+//CREATE
 router.put('/bet/create/:id', megaController.createBet);
 router.put('/bet/insert/:id', megaController.createBet);
 
