@@ -58,3 +58,14 @@ exports.getMatchByDate = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.getLiveMatch = async (req, res, next) => {
+    try {
+        const match = req.params.id;
+        const matches = await matchService.getLiveMatch(match);
+        res.json(matches);
+    } catch (error) {
+        next(error);
+    }
+};
+

@@ -79,11 +79,21 @@ const getFormattedDate = () => {
     return `${year}${month}${day}`;
 };
 
+const getLiveMatch = async (matchId) => {
+    try {
+        const response = await axios.get(`${API_URL}/matchDetails?matchId=${matchId}&${INFO}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
 module.exports = {
     getMatchH2h,
     getMatchLineups,
     getMatchInfo,
     getMatchStats,
     getMatchToday,
-    getMatchByDate
+    getMatchByDate,
+    getLiveMatch
 };
