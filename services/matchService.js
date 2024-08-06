@@ -1,87 +1,32 @@
 const getDb = require('../config/database').getDb;
+const axios = require('axios');
+const API_URL = process.env.API_URL;
+const INFO = process.env.INFO;
 
-const getMatchStatistics = async (matchId) => {
+const arrayLeagues = [55,86,47,53,54,87,57,61]
+
+const getMatchInfo = async (matchId) => {
     try {
-        const db = await getDb();
-        const query = [
-            { $match: { id: parseInt(matchId) } },
-            { $unwind: { path: '$statistics' } },
-            {
-                $group: {
-                    _id: '$statistics.type_id',
-                    stats: { $push: '$statistics' }
-                }
-            },
-            {
-                $project: {
-                    stats: { participant_id: 1, data: 1 }
-                }
-            }
-        ]
-        const queryCursor = await db.collection("matches").aggregate(query);
-        const queryResult = await queryCursor.toArray();
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: `Match ID '${matchId}' not found`
-            };
-        }
-        return queryResult[0];
+        const response = await axios.get(`${API_URL}/matchDetails?matchId=${matchId}&${INFO}`);
+        let res = response.data.content.matchFacts;
+        res.QAData = undefined;
+        res.matchesInRound = undefined;
+        res.topScorers = undefined;
+        res.insights = undefined;
+        res.topPlayers = undefined;
+        res.poll = undefined;
+        res.playerOfTheMatch = undefined;
+        res.header = response.data.header;
+        return res;
     } catch (error) {
         throw new Error(error);
     }
 };
 
-const getMatchDetails = async (matchId) => {
+const getMatchH2h = async (matchId) => {
     try {
-        const db = await getDb();
-        const query = [
-            { $match: { id: parseInt(matchId) } },
-            {
-                $project: {
-                    _id: 0,
-                    id: 1,
-                    league_id: 1,
-                    season_id: 1,
-                    starting_at: 1,
-                    scores: {
-                        type_id: 1,
-                        score: 1,
-                        description: 1,
-                        participant_id: 1
-                    },
-                    'state.developer_name': 1,
-                    'round.name': 1,
-                    venue: 1,
-                    events: {
-                        id: 1,
-                        participant_id: 1,
-                        type_id: 1,
-                        player_id: 1,
-                        player_name: 1,
-                        related_player_id: 1,
-                        related_player_name: 1,
-                        result: 1,
-                        info: 1,
-                        addition: 1,
-                        minute: 1,
-                        extra_minute: 1,
-                        injured: 1,
-                        on_bench: 1
-                    }
-                }
-            }
-        ]
-        const queryCursor = await db.collection("matches").aggregate(query);
-        const queryResult = await queryCursor.toArray();
-
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: `Match ID '${matchId}' not found`
-            };
-        }
-        return queryResult[0];
+        const response = await axios.get(`${API_URL}/matchDetails?matchId=${matchId}&${INFO}`);
+        return response.data.content.h2h;
     } catch (error) {
         throw new Error(error);
     }
@@ -89,176 +34,56 @@ const getMatchDetails = async (matchId) => {
 
 const getMatchLineups = async (matchId) => {
     try {
-        const db = await getDb();
-        var query = [
-            { $match: { id: parseInt(matchId) } },
-            { $unwind: { path: '$lineups' } },
-            {
-                $group: {
-                    _id: '$lineups.team_id',
-                    lineup: {
-                        $push: {
-                            $cond: [
-                                {
-                                    $ne: [
-                                        '$lineups.formation_field',
-                                        null
-                                    ]
-                                },
-                                '$lineups',
-                                null
-                            ]
-                        }
-                    },
-                    bench: {
-                        $push: {
-                            $cond: [
-                                {
-                                    $eq: [
-                                        '$lineups.formation_field',
-                                        null
-                                    ]
-                                },
-                                '$lineups',
-                                null
-                            ]
-                        }
-                    }
-                }
-            },
-            {
-                $project: {
-                    lineup: {
-                        position_id: 1,
-                        formation_field: 1,
-                        type_id: 1,
-                        formation_position: 1,
-                        player_name: 1,
-                        jersey_number: 1,
-                        'player.common_name': 1,
-                        'player.image_path': 1
-                    },
-                    bench: {
-                        position_id: 1,
-                        type_id: 1,
-                        player_name: 1,
-                        jersey_number: 1,
-                        'player.common_name': 1,
-                        'player.image_path': 1
-                    }
-                }
-            }
-        ]
-        const queryCursor = await db.collection("matches").aggregate(query);
-        const queryResult = await queryCursor.toArray();
-
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: `Match ID '${matchId}' not found`
-            };
-        }
-        return queryResult[0];
+        const response = await axios.get(`${API_URL}/matchDetails?matchId=${matchId}&${INFO}`);
+        return response.data.content.lineup2;
     } catch (error) {
         throw new Error(error);
     }
 };
 
-const getMatch = async (matchId) => {
+const getMatchStats = async (matchId) => {
     try {
-        const db = await getDb();
-        const query = { id: parseInt(matchId) };
-        const queryCursor = await db.collection("matches").find(query);
-        const queryResult = await queryCursor.toArray();
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: `Match ID '${matchId}' not found`
-            };
-        }
-        return queryResult[0];
+        const response = await axios.get(`${API_URL}/matchDetails?matchId=${matchId}&${INFO}`);
+        return response.data.content.stats;
     } catch (error) {
         throw new Error(error);
     }
 };
 
-const getMatchesByDay = async (date) => {
+const getMatchToday = async (matchId) => {
     try {
-        const db = await getDb();
-        const query = [
-            {
-                $match: {
-                    starting_at: { $regex: `^${date}` }
-                }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    id: 1,
-                    league_id: 1,
-                    starting_at: 1,
-                    participants: {
-                        id: 1,
-                        name: 1,
-                        image_path: 1,
-                        meta: 1
-                    },
-                    scores: {
-                        $map: {
-                            input: {
-                                $filter: {
-                                    input: '$scores',
-                                    as: 'score',
-                                    cond: {
-                                        $eq: ['$$score.type_id', 1525]
-                                    }
-                                }
-                            },
-                            as: 'score',
-                            in: {
-                                type_id: '$$score.type_id',
-                                participant_id:
-                                    '$$score.participant_id',
-                                score: '$$score.score'
-                            }
-                        }
-                    },
-                    'state.developer_name': 1
-                }
-            },
-            {
-                $group: {
-                    _id: '$league_id',
-                    matches: { $push: '$$ROOT' }
-                }
-            }
-        ];
-        const queryCursor = await db.collection("matches").aggregate(query);
-        const queryResult = await queryCursor.toArray();
-
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: `anyone match in data '${date}'`
-            };
-        }
-        return queryResult;
+        const formattedDate = getFormattedDate();
+        const response = await axios.get(`${API_URL}matches?date=${formattedDate}&timezone=Europe%2FRome&${INFO}`);
+        return response.data.leagues.filter((match) => arrayLeagues.includes(match.id));
     } catch (error) {
         throw new Error(error);
     }
 };
 
-const generateMatchesForDate = (date) => {
-    return [
-        { date, teamA: 'Team 1', teamB: 'Team 2', scoreA: 0, scoreB: 0 },
-        { date, teamA: 'Team 3', teamB: 'Team 4', scoreA: 0, scoreB: 0 },
-    ];
+
+const getMatchByDate = async (date) => {
+    try {
+        const formattedDate = getFormattedDate();
+        const response = await axios.get(`${API_URL}matches?date=${date}&timezone=Europe%2FRome&${INFO}`);
+        return response.data.leagues.filter((match) => arrayLeagues.includes(match.id));
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const getFormattedDate = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}${month}${day}`;
 };
 
 module.exports = {
-    getMatchStatistics,
-    getMatchDetails,
-    getMatchesByDay,
+    getMatchH2h,
     getMatchLineups,
-    getMatch
+    getMatchInfo,
+    getMatchStats,
+    getMatchToday,
+    getMatchByDate
 };

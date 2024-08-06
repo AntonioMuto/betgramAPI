@@ -1,54 +1,22 @@
 const getDb = require('../config/database').getDb;
+const axios = require('axios');
+const API_URL = process.env.API_URL;
+const INFO = process.env.INFO;
 
 const getPlayerById = async (playerId) => {
     try {
-        const db = await getDb();
-        var query = { id: parseInt(playerId) };
-        const queryCursor = db.collection("players").find(query);
-        const queryResult = await queryCursor.toArray();
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: `Player ID '${playerId}' not found`
-            };
+        const response = await axios.get(`${API_URL}/playerData?id=${playerId}&${INFO}`);
+        let res = {
+            birthDate: response.data.birthDate,
+            isCaptain: response.data.isCaptain,
+            name: response.data.name,
+            playerInformation: response.data.playerInformation,
+            positionDescription: response.data.positionDescription,
+            primaryTeam: response.data.primaryTeam,
+            trophies: response.data.trophies,
+            mainLeague: response.data.mainLeague
         }
-        return queryResult[0];
-    } catch (error) {
-        throw new Error(error);
-    }
-};
-
-const getPlayerByTeam = async (teamId) => {
-    try {
-        const db = await getDb();
-        var query = { team_id: parseInt(teamId) };
-        var sorting = { position_id: 1 };
-        const queryCursor = db.collection("players").find(query).sort(sorting);
-        const queryResult = await queryCursor.toArray();
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: `Players not founds`
-            };
-        }
-        return queryResult;
-    } catch (error) {
-        throw new Error(error);
-    }
-};
-
-const getPlayers = async () => {
-    try {
-        const db = await getDb();
-        const queryCursor = db.collection("players").find();
-        const queryResult = await queryCursor.toArray();
-        if (queryResult.length === 0) {
-            return {
-                status: "error",
-                error: ` Players not founds`
-            };
-        }
-        return queryResult;
+        return res;
     } catch (error) {
         throw new Error(error);
     }
@@ -56,6 +24,4 @@ const getPlayers = async () => {
 
 module.exports = {
     getPlayerById,
-    getPlayerByTeam,
-    getPlayers
 };

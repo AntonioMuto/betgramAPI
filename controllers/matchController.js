@@ -1,19 +1,19 @@
 const matchService = require('../services/matchService');
 
-exports.getMatchStatistics = async (req, res, next) => {
+exports.getMatchInfo = async (req, res, next) => {
     try {
         const matchId = req.params.id;
-        const matches = await matchService.getMatchDetails(matchId);
+        const matches = await matchService.getMatchInfo(matchId);
         res.json(matches);
     } catch (error) {
         next(error);
     }
 };
 
-exports.getMatchesDetails = async (req, res, next) => {
+exports.getMatchH2h = async (req, res, next) => {
     try {
         const matchId = req.params.id;
-        const matches = await matchService.getMatchDetails(matchId);
+        const matches = await matchService.getMatchH2h(matchId);
         res.json(matches);
     } catch (error) {
         next(error);
@@ -30,20 +30,29 @@ exports.getMatchLineups = async (req, res, next) => {
     }
 };
 
-exports.getMatch = async (req, res, next) => {
+exports.getMatchStats = async (req, res, next) => {
     try {
         const matchId = req.params.id;
-        const match = await matchService.getMatch(matchId);
-        res.json(match);
+        const matches = await matchService.getMatchStats(matchId);
+        res.json(matches);
     } catch (error) {
         next(error);
     }
 };
 
-exports.getMatchesByDay = async (req, res, next) => {
+exports.getMatchToday = async (req, res, next) => {
     try {
-        const date = req.params.data;
-        const matches = await matchService.getMatchesByDay(date);
+        const matches = await matchService.getMatchToday();
+        res.json(matches);
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.getMatchByDate = async (req, res, next) => {
+    try {
+        const date = req.params.date;
+        const matches = await matchService.getMatchByDate(date);
         res.json(matches);
     } catch (error) {
         next(error);
